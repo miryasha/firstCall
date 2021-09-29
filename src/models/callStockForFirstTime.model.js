@@ -17,46 +17,46 @@ const key = process.env.ALPHA_KEY
         .then(data =>{
 
                   //const data =  response.json(); 
+            //console.log(data)
+            // const ohlcData =  data["Time Series (Daily)"];
+            // const dataToArray =  Object.entries(ohlcData);  //loop throgh all keys & values
             
-            const ohlcData =  data["Time Series (Daily)"];
-            const dataToArray =  Object.entries(ohlcData);  //loop throgh all keys & values
-            
-            const sleep = (milliseconds) => {
-                return new Promise(resolve => setTimeout(resolve, milliseconds))
-              }
+            // const sleep = (milliseconds) => {
+            //     return new Promise(resolve => setTimeout(resolve, milliseconds))
+            //   }
               
               
-              const insertData = async () => {
+            //   const insertData = async () => {
 
-                  let firstId = parseInt(dataToArray.length -1) ;
-                  for (let j = 0 ; j <= firstId ; firstId--) {
-                    await sleep(2000)
+            //       let firstId = parseInt(dataToArray.length -1) ;
+            //       for (let j = 0 ; j <= firstId ; firstId--) {
+            //         await sleep(2000)
                     
-                          const symbol_date =  dataToArray[firstId][0];//brings back the dates
-                          const opening =  dataToArray[firstId][1]["1. open"];
-                          const high =  dataToArray[firstId][1]["2. high"];
-                          const low =  dataToArray[firstId][1]["3. low"];
-                          const closing =  dataToArray[firstId][1]["4. close"];
+            //               const symbol_date =  dataToArray[firstId][0];//brings back the dates
+            //               const opening =  dataToArray[firstId][1]["1. open"];
+            //               const high =  dataToArray[firstId][1]["2. high"];
+            //               const low =  dataToArray[firstId][1]["3. low"];
+            //               const closing =  dataToArray[firstId][1]["4. close"];
                         
-                        let sql =  `INSERT INTO ${stockTicker}  ( symbol, symbol_date, opening, high, low, closing) VALUES ("${stockTicker}","${symbol_date}", "${opening}" ,"${high}","${low}", "${closing}")`
-                        return  this.query(sql, function(err, rows){
-                                  if(err){ 
-                                    return err
+            //             let sql =  `INSERT INTO ${stockTicker}  ( symbol, symbol_date, opening, high, low, closing) VALUES ("${stockTicker}","${symbol_date}", "${opening}" ,"${high}","${low}", "${closing}")`
+            //             return  this.query(sql, function(err, rows){
+            //                       if(err){ 
+            //                         return err
                                   
-                                  }
-                                  else {
+            //                       }
+            //                       else {
                                   
-                                    return rows.affectedRows
-                                  }
-                              }).catch(err => {return err})
+            //                         return rows.affectedRows
+            //                       }
+            //                   }).catch(err => {return err})
                   
 
-                  }
+            //       }
                                         
                 
-                }
+            //     }
               
-                return insertData().catch(err =>console.log(err))
+            //     return insertData().catch(err =>console.log(err))
           
         })
 
