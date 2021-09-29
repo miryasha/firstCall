@@ -1,13 +1,10 @@
 const Base = require("./base.model");
+const connection = require("../config/dataBase.config")
 const fetch = require('node-fetch');
-const axios = require('axios');
+
 
 require('dotenv').config();
 const key = process.env.ALPHA_KEY
-
-
-
-
 
 
   class CallStockForFirstTime extends Base {
@@ -15,9 +12,9 @@ const key = process.env.ALPHA_KEY
     addData(stockTicker){
 
       const endPoint = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${stockTicker}&outputsize=full&apikey=${key}`
-
-
-      async function getResuts() {
+      
+      async function getResuts(stockTicker) {
+        
           try {
            
             const response = await fetch(endPoint)
@@ -31,36 +28,36 @@ const key = process.env.ALPHA_KEY
               
               
               const insertData = async () => {
-
+                  
                   let firstId = parseInt(dataToArray.length -1) ;
                   for (let j = 0 ; j <= firstId ; firstId--) {
                     await sleep(2000)
                     
-                          const symbol_date =  dataToArray[firstId][0];//brings back the dates
-                          const opening =  dataToArray[firstId][1]["1. open"];
-                          const high =  dataToArray[firstId][1]["2. high"];
-                          const low =  dataToArray[firstId][1]["3. low"];
-                          const closing =  dataToArray[firstId][1]["4. close"];
+                          const symbol_date = await dataToArray[firstId][0];//brings back the dates
+                          const opening = await dataToArray[firstId][1]["1. open"];
+                          const high = await dataToArray[firstId][1]["2. high"];
+                          const low = await dataToArray[firstId][1]["3. low"];
+                          const closing = await dataToArray[firstId][1]["4. close"];
+                          await connection.query(`INSERT INTO ${stockTicker}  ( symbol, symbol_date, opening, high, low, closing) VALUES ("${stockTicker}","${symbol_date}", "${opening}" ,"${high}","${low}", "${closing}")`)
+                          
                         
-                        let sql =  `INSERT INTO ${stockTicker}  ( symbol, symbol_date, opening, high, low, closing) VALUES ("${stockTicker}","${symbol_date}", "${opening}" ,"${high}","${low}", "${closing}")`
-                        return  this.query(sql)
-                  
                   }
                                         
                 
                 }
               
-                return insertData().catch(err =>console.log(err))
+                 insertData()
+                 .catch(err =>console.log(err))
 
           } catch (error) {
             console.error(error);
           }
       }
-                         
+                               
       return getResuts(stockTicker).catch(err => console.log(err))
        
     }
-    
+
 
 } 
     
