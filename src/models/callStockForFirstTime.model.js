@@ -12,11 +12,11 @@ const dbKey = process.env.PASS_HASH_DATABASE
     addData(stockTicker){
                                  
         const endPoint = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${stockTicker}&outputsize=full&apikey=${key}`
-        const response = await fetch(endPoint)
-        const data = await response.json(); 
+        const response =  fetch(endPoint)
+        const data =  response.json(); 
 
-        const ohlcData = await data["Time Series (Daily)"];
-        const dataToArray = await Object.entries(ohlcData);  //loop throgh all keys & values
+        const ohlcData =  data["Time Series (Daily)"];
+        const dataToArray =  Object.entries(ohlcData);  //loop throgh all keys & values
         
         const sleep = (milliseconds) => {
             return new Promise(resolve => setTimeout(resolve, milliseconds))
