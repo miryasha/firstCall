@@ -15,19 +15,19 @@ router.post('/stock', stockCaller);
   const { stockTicker } = req.body;  
        
           
-      models.callStockForFirstTime.addData( stockTicker )  
-      .then(() => {
-          res.send( {message: "we are working on that it takes 4 hours!!" } )
-          res.status(201)
-          .end()
-      })
-      .catch(err => {
-          console.log(err)
-          res.send( { err : err })
-          res.status(500)
-          .end()
+      models.callStockForFirstTime.addData( stockTicker )
+    //   .then(() => {
+    //       res.send( {message: "we are working on that it takes 4 hours!!" } )
+    //       res.status(201)
+    //       .end()
+    //   })
+    //   .catch(err => {
+    //       console.log(err)
+    //       res.send( { err : err })
+    //       res.status(500)
+    //       .end()
           
-      })
+    //   })
         
    
    }
