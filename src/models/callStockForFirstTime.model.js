@@ -1,4 +1,3 @@
-const Base = require("./base.model");
 const connection = require("../config/dataBase.config")
 const fetch = require('node-fetch');
 
@@ -7,7 +6,7 @@ require('dotenv').config();
 const key = process.env.ALPHA_KEY
 
 
-  class CallStockForFirstTime extends Base {
+  class CallStockForFirstTime  {
 
     addData(stockTicker){
 
