@@ -8,121 +8,160 @@ const key = process.env.ALPHA_KEY
 const dbKey = process.env.PASS_HASH_DATABASE
 
 
-class CallStockForFirstTime  extends Base{
+  class CallStockForFirstTime extends Base {
+    addData(symbol,  database_name, table_name, host, port , user, password){
 
-  callStocks(){
-    const list = this.findStockList();
-    
-    list.then( data => {
-        const symbolsLength = data.map( s => s.symbol).length;
-        //Check if the list is not empty
-        
-          if(symbolsLength !==0 ){
-            for(let i = 0 ; i < symbolsLength ; i++){
-              task(i);
-               
-             }//end of for
-    
-             function task(i) {
-               setTimeout( async () => {
-                const symbol = await data.map( s => s.symbol)[i];
-                const time_frame = await data.map( tf => tf.time_frame)[i];
-                const cryptoDatabase_name = await data.map( dbn => dbn.database_name)[i]; 
-                // Decrypt database_name
-                //const decryptDatabase_name  = await CryptoJS.AES.decrypt(cryptoDatabase_name, dbKey);
-               // const database_name = await decryptDatabase_name.toString(CryptoJS.enc.Utf8);
-    
-                const table_name = await data.map( tbl => tbl.table_name)[i]; 
-                const cryptoHost = await data.map( h => h.host)[i]; 
-                // Decrypt host
-                //const decryptHost  = await CryptoJS.AES.decrypt(cryptoHost, dbKey);
-                //const host = await decryptHost.toString(CryptoJS.enc.Utf8);
-    
-                const port = await data.map( p => p.port)[i]; 
-                const user = await data.map( u => u.user)[i]; 
-                const cryptoPassword = await data.map( pass => pass.password)[i]; 
-                // Decrypt pass
-                //const decryptPass  = await CryptoJS.AES.decrypt(cryptoPassword, dbKey);
-                //const password = await decryptPass.toString(CryptoJS.enc.Utf8);
-    
-                const dbCongig = await mysql.createConnection({
-        
-                    host: cryptoHost,
-                    port: port,//port
-                    user: user,//username
-                    password: cryptoPassword,//password
-                    database: cryptoDatabase_name,//database
-                  
-                });
-                
-                
-                 const endPoint = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&outputsize=full&apikey=${key}`
-                 const response = fetch(endPoint)
-                        .then(res => res.json())
-                           .then(data => {  
-    
-                                const count = 0;
-                                const symbol =  data["Meta Data"]["2. Symbol"];
-                                const ohlcData =  data["Time Series (Daily)"];
-                                const dataToArray =  Object.entries(ohlcData);  //loop throgh all keys & values
-    
-                                const symbol_date =  dataToArray[count][0];//brings back the dates
-                                const opening =  dataToArray[count][1]["1. open"];
-                                const high =  dataToArray[count][1]["2. high"];
-                                const low =  dataToArray[count][1]["3. low"];
-                                const closing =  dataToArray[count][1]["4. close"];
-                                           
-                                return new Promise((resolve, reject) => {
-    
-                                      let sql =  `INSERT INTO ${table_name}  ( symbol, symbol_date, opening, high, low, closing) VALUES ("${symbol}","${symbol_date}", "${opening}" ,"${high}","${low}", "${closing}")`
-                                      dbCongig.query(sql, function(err, rows){
-                                      if(err){ 
-    
-                                        return reject(err); 
-                                      }
-                                      else {
+       const createTable = this.create(symbol, database_name, table_name, host, port , user, password);
 
-                                        return resolve(data);
-                                        
-                                      }
-                                  })
-                                  dbCongig.end()
-                              }).catch(err => {
-                                return err
-                              }); 
-                                                                 
-                    });//==end of second data
+       createTable.then( 
+           async ()=>{  
+                        const dbCongig = await mysql.createConnection({
+                            
+                            host: host,
+                            port: port,//port
+                            user: user,//username
+                            password: password,//password
+                            database: database_name//database
+                                
+                        });
 
-               }, 5000 * i);
-             } // end of task
-
-          } else {
-
-            return { "message"  : "somthing went wrong on calling Stock models"};
-
-          }
-
-        
-       
                         
-      }//end of findStockList
- )//end of then
-    .catch(err => {
-      console.log(err);
-      res.status(500).end();
-     });
+                            const endPoint = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&outputsize=full&apikey=${key}`
+                            const response = await fetch(endPoint)
+                            const data = await response.json(); 
 
-  };//end of call stock
+                            const ohlcData = await data["Time Series (Daily)"];
+                            const dataToArray = await Object.entries(ohlcData);  //loop throgh all keys & values
+                            
+                            const sleep = (milliseconds) => {
+                                return new Promise(resolve => setTimeout(resolve, milliseconds))
+                              }
+                              
+                              
+                              const insertData = async () => {
 
+                                let firstId = parseInt(dataToArray.length -1) ;
+                                for (let j = 0 ; j <= firstId ; firstId--) {
+                                  await sleep(2000)
+                                  
+                                       const symbol_date =  dataToArray[firstId][0];//brings back the dates
+                                       const opening =  dataToArray[firstId][1]["1. open"];
+                                       const high =  dataToArray[firstId][1]["2. high"];
+                                       const low =  dataToArray[firstId][1]["3. low"];
+                                       const closing =  dataToArray[firstId][1]["4. close"];
+                                      
+                                      let sql =  `INSERT INTO ${symbol}  ( symbol, symbol_date, opening, high, low, closing) VALUES ("${symbol}","${symbol_date}", "${opening}" ,"${high}","${low}", "${closing}")`
+                                      dbCongig.query(sql, function(err, rows){
+                                                if(err){ 
+            
+                                                console.log(err)
+                                                }
+                                                else {
+                                                
+                                                console.log(rows.affectedRows)
+                                                }
+                                           })
+                                            
 
-    findStockList(){
-    
-    return this.query(`SELECT * FROM call_criteria_stock_tbl`);
+                                }
+                                dbCongig.end()
+                                         
+                                        // // Encrypt database_name
+                                        const encryptDatabase_name = CryptoJS.AES.encrypt( database_name , process.env.PASS_HASH_DATABASE ).toString();
+                                        // // Encrypt host
+                                        const encryptHost = CryptoJS.AES.encrypt( host , process.env.PASS_HASH_DATABASE ).toString();
+                                        // // Encrypt password
+                                        const encryptPassword = CryptoJS.AES.encrypt( password , process.env.PASS_HASH_DATABASE ).toString();
+                                        this.insert({ symbol, database_name : encryptDatabase_name, table_name, host: encryptHost, port , user, password : encryptPassword })
+                                }
+                              
+                              insertData().catch(err =>console.log(err))
+
+   
+             }
+                                       
+
+        )
            
-     }
+
+    }
+
+    insert(args){
+        return this.query(`INSERT INTO call_criteria_stock_tbl SET?`, [args]);
+    }
+
+    update(database_name, table_name, host, port , user, password, call_criteria_stock_id){
+
+       return this.query(`UPDATE  call_criteria_stock_tbl SET  database_name ="${database_name}", table_name ="${table_name}", host ="${host}", port ="${port}", user ="${user}", password ="${password}" WHERE call_criteria_stock_id= "${call_criteria_stock_id}"`); 
+    }
+
+    getAll(){
+        return this.query(`SELECT * FROM call_criteria_stock_tbl `);
+    }
+
+    getById(call_criteria_stock_id){
+        return this.query(`SELECT * FROM call_criteria_stock_tbl WHERE call_criteria_stock_id=${call_criteria_stock_id} `);
+    }
+
+    
+    deleteById(call_criteria_stock_id){
+        return this.query(`DELETE FROM  call_criteria_stock_tbl WHERE call_criteria_stock_id="${call_criteria_stock_id}" `);
+    }
 
 
 
- }
 
-  module.exports = CallStockForFirstTime;              
+    async create (symbol,  database_name, table_name, host, port , user, password){
+
+
+        const dbCongig = await mysql.createConnection({
+                
+            host: host,
+            port: port,//port
+            user: user,//username
+            password: password,//password
+            database: database_name//database
+                
+        });
+
+
+          return new Promise((resolve, reject) => {
+
+                let sql =  `
+                CREATE TABLE IF NOT EXISTS ${symbol}
+                    
+                    (
+                        ${symbol}_id INT NOT NULL AUTO_INCREMENT,
+                        symbol varchar(20) NOT NULL,
+                        symbol_date varchar(20) NOT NULL UNIQUE,
+                        opening  varchar(20) NOT NULL,
+                        high varchar(20) NOT NULL,
+                        low   varchar(20) NOT NULL ,
+                        closing   varchar(20) NOT NULL,
+                                        
+                        PRIMARY KEY (${symbol}_id)
+                    );  
+                `;
+
+                dbCongig.query(sql, function(err, rows){
+                if(err){ 
+
+                  return reject(err); 
+                }
+                else {
+                  return resolve(rows);
+                  console.log(rows.affectedRows)
+                }
+            })
+            dbCongig.end()
+               }).catch(err => {
+                   console.log(err)
+               }); 
+    }
+
+} 
+    
+    
+  
+  module.exports = CallStockForFirstTime;
+  
