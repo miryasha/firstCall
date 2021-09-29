@@ -15,7 +15,7 @@ router.post('/stock', stockCaller);
   const { stockTicker } = req.body;  
        
           
-      models.callStockForFirstTime    ( stockTicker )  
+      models.callStockForFirstTime.addData( stockTicker )  
       .then(() => {
           res.send( {message: "we are working on that it takes 4 hours!!" } )
           res.status(201)

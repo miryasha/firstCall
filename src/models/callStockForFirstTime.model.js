@@ -10,7 +10,6 @@ const dbKey = process.env.PASS_HASH_DATABASE
 
   class CallStockForFirstTime extends Base {
     addData(stockTicker){
-
                                  
         const endPoint = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${stockTicker}&outputsize=full&apikey=${key}`
         const response = await fetch(endPoint)
@@ -37,7 +36,7 @@ const dbKey = process.env.PASS_HASH_DATABASE
                       const closing =  dataToArray[firstId][1]["4. close"];
                     
                     let sql =  `INSERT INTO ${stockTicker}  ( symbol, symbol_date, opening, high, low, closing) VALUES ("${stockTicker}","${symbol_date}", "${opening}" ,"${high}","${low}", "${closing}")`
-                    dbCongig.query(sql, function(err, rows){
+                    return  this.query(sql, function(err, rows){
                               if(err){ 
                                 return err
                               
@@ -46,12 +45,11 @@ const dbKey = process.env.PASS_HASH_DATABASE
                               
                                 return rows.affectedRows
                               }
-                          })
+                          }).catch(err => {return err})
                           
 
               }
-              dbCongig.end()
-                      
+                                    
              
             }
           
