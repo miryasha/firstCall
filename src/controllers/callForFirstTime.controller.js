@@ -16,18 +16,18 @@ router.post('/stock', stockCaller);
        
           
     models.callStockForFirstTime.addData( stockTicker )
-      .then(() => {
-          res.send( {message: "we are working on that it takes 4 hours!!" } )
-          res.status(201)
-          .end()
-      })
-      .catch(err => {
-          console.log(err)
-          res.send( { err : err })
-          res.status(500)
-          .end()
+      // .then(() => {
+      //     res.send( {message: "we are working on that it takes 4 hours!!" } )
+      //     res.status(201)
+      //     .end()
+      // })
+      // .catch(err => {
+      //     console.log(err)
+      //     res.send( { err : err })
+      //     res.status(500)
+      //     .end()
           
-      })
+      // })
         
    
    }
