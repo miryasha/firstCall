@@ -18,7 +18,6 @@ const key = process.env.ALPHA_KEY
            
             const response = await fetch(endPoint)
             const data = await response.json(); 
-
             const ohlcData = await data["Time Series (Daily)"];
             const dataToArray = await Object.entries(ohlcData);  //loop throgh all keys & values
             const sleep = (milliseconds) => {
