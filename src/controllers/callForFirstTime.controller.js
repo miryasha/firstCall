@@ -34,9 +34,4 @@ router.post('/stock', stockCaller);
 
    
 
-
- 
-
-
-
 module.exports = router
