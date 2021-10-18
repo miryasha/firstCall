@@ -29,7 +29,7 @@ const key = process.env.ALPHA_KEY
                   
                   let firstId = parseInt(dataToArray.length -1) ;
                   for (let j = 0 ; j <= firstId ; firstId--) {
-                    await sleep(2000)
+                    await sleep(500)
                     
                           const symbol_date = await dataToArray[firstId][0];//brings back the dates
                           const opening = await dataToArray[firstId][1]["1. open"];
