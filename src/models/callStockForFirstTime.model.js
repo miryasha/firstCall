@@ -1,6 +1,5 @@
 const Base = require("./base.model");
-
-
+const connection = require('../config/dbConnection.config')
 const fetch = require('node-fetch');
 require('dotenv').config();
 const key = process.env.ALPHA_KEY
@@ -14,6 +13,7 @@ class CallStockForFirstTime extends Base {
           const endPoint = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${stockTicker}&outputsize=full&apikey=${key}`
           
           async function getResuts(stockTicker) {
+
                   const response = await fetch(endPoint)
                   const data = await response.json(); 
                   const ohlcData = await data["Time Series (Daily)"];
@@ -33,9 +33,7 @@ class CallStockForFirstTime extends Base {
                                       const high = await dataToArray[firstId][1]["2. high"];
                                       const low = await dataToArray[firstId][1]["3. low"];
                                       const closing = await dataToArray[firstId][1]["4. close"];
-                                        this.query(`INSERT INTO ${stockTicker}  ( symbol, symbol_called_date, opening, high, low, closing) VALUES ("${stockTicker}","${symbol_date}", "${opening}" ,"${high}","${low}", "${closing}")`)
-                                      
-                                    
+                                      connection.query(`INSERT INTO ${stockTicker}  ( symbol, symbol_called_date, opening, high, low, closing) VALUES ("${stockTicker}","${symbol_date}", "${opening}" ,"${high}","${low}", "${closing}")`)   
                               }
                       }                                  
                       insertData()
