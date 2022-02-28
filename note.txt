@@ -1,0 +1,69 @@
+stock
+    https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=GLD&outputsize=full&apikey=QI88AEJ5GT0PKJRU
+
+"Meta Data": {
+        "1. Information": "Daily Prices (open, high, low, close) and Volumes",
+        "2. Symbol": "IBM",
+        "3. Last Refreshed": "2022-02-25",
+        "4. Output Size": "Full size",
+        "5. Time Zone": "US/Eastern"
+    },
+    "Time Series (Daily)": {
+        "2022-02-25": {
+            "1. open": "122.0500",
+            "2. high": "124.2625",
+            "3. low": "121.4500",
+            "4. close": "124.1800",
+            "5. volume": "4460904"
+        },
+
+
+forex
+    https://www.alphavantage.co/query?function=FX_DAILY&from_symbol=EUR&to_symbol=USD&outputsize=full&QI88AEJ5GT0PKJRU
+
+
+    
+    "Meta Data": {
+        "1. Information": "Forex Daily Prices (open, high, low, close)",
+        "2. From Symbol": "EUR",
+        "3. To Symbol": "USD",
+        "4. Output Size": "Full size",
+        "5. Last Refreshed": "2022-02-28 07:05:00",
+        "6. Time Zone": "UTC"
+    },
+    "Time Series FX (Daily)": {
+        "2022-02-28": {
+            "1. open": "1.11811",
+            "2. high": "1.11945",
+            "3. low": "1.11400",
+            "4. close": "1.11578"
+        },
+        "20
+
+
+https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=BTC&market=CNY&apikey=demo
+
+
+
+    "Meta Data": {
+        "1. Information": "Daily Prices and Volumes for Digital Currency",
+        "2. Digital Currency Code": "BTC",
+        "3. Digital Currency Name": "Bitcoin",
+        "4. Market Code": "CNY",
+        "5. Market Name": "Chinese Yuan",
+        "6. Last Refreshed": "2022-02-28 00:00:00",
+        "7. Time Zone": "UTC"
+    },
+    "Time Series (Digital Currency Daily)": {
+        "2022-02-28": {
+            "1a. open (CNY)": "238141.31845200",
+            "1b. open (USD)": "37699.08000000",
+            "2a. high (CNY)": "238791.70647600",
+            "2b. high (USD)": "37802.04000000",
+            "3a. low (CNY)": "236568.97887300",
+            "3b. low (USD)": "37450.17000000",
+            "4a. close (CNY)": "236737.00841300",
+            "4b. close (USD)": "37476.77000000",
+            "5. volume": "904.80905000",
+            "6. market cap (USD)": "904.80905000"
+        },
