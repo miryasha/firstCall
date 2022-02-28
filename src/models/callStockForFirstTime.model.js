@@ -36,14 +36,11 @@ const key = process.env.ALPHA_KEY
                           const high = await dataToArray[firstId][1]["2. high"];
                           const low = await dataToArray[firstId][1]["3. low"];
                           const closing = await dataToArray[firstId][1]["4. close"];
-                          await connection.query(`INSERT INTO ${stockTicker}  ( symbol, symbol_date, opening, high, low, closing) VALUES ("${stockTicker}","${symbol_date}", "${opening}" ,"${high}","${low}", "${closing}")`)
+                          await connection.query(`INSERT INTO ${stockTicker}  ( symbol, symbol_called_date, opening, high, low, closing) VALUES ("${stockTicker}","${symbol_date}", "${opening}" ,"${high}","${low}", "${closing}")`)
                           
                         
                   }
-                                        
-                
-                }
-              
+                                                  
                  insertData()
                  .catch(err =>console.log(err))
 
