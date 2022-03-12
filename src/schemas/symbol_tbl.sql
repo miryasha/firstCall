@@ -26,3 +26,5 @@ CREATE TABLE IF NOT EXISTS SPY
                                         
 	PRIMARY KEY (SPY_id)
 );
+
+ALTER TABLE cargrou2_SPY.SPYV CHANGE  symbol_date  symbol_called_date varchar(20) NOT NULL UNIQUE;
